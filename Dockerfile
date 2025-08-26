@@ -43,14 +43,6 @@ RUN npm run build
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Generate application key
-RUN php artisan key:generate --force
-
-# Clear and cache config
-RUN php artisan config:cache
-RUN php artisan route:cache
-RUN php artisan view:cache
-
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
