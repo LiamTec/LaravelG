@@ -46,8 +46,17 @@ RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 # Enable Apache mod_rewrite
 RUN a2enmod rewrite
 
-# Copy custom Apache configuration
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+# Create Apache configuration inline
+RUN echo '<VirtualHost *:80>\n\
+    ServerAdmin webmaster@localhost\n\
+    DocumentRoot /var/www/html/public\n\
+    <Directory /var/www/html/public>\n\
+        AllowOverride All\n\
+        Require all granted\n\
+    </Directory>\n\
+    ErrorLog ${APACHE_LOG_DIR}/error.log\n\
+    CustomLog ${APACHE_LOG_DIR}/access.log combined\n\
+</VirtualHost>' > /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 
